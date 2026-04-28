@@ -25,7 +25,6 @@ from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken
 from decouple import config
-import ollama
 
 from .models import ContactRequest, Article, Project, Review, PromoEvent, Solution
 from .serializers import (
@@ -284,8 +283,7 @@ class StatsView(APIView):
 class ChatBotView(APIView):
     """
     POST /api/chat/
-    Chatbot endpoint that integrates with Ollama (free, local AI).
-    Handles user messages and returns AI responses.
+    Simple chatbot endpoint for Sugam-AI Solutions.
     """
     permission_classes = [AllowAny]
 
@@ -299,99 +297,32 @@ class ChatBotView(APIView):
                     status=status.HTTP_400_BAD_REQUEST
                 )
 
-            # Professional responses based on message content
+            # Simple keyword-based responses
             message_lower = user_message.lower()
             
-            # Check for specific keywords to provide relevant responses
             if any(word in message_lower for word in ['hello', 'hi', 'hey', 'greetings']):
-                ai_response = """👋 Welcome to Sugam-AI Solutions!
-
-I'm your AI assistant, here to help you explore our cutting-edge AI solutions. We're a leading AI company based in Kathmandu, Nepal, specializing in:
-
-🤖 AI Prototyping
-🤖 Virtual Assistants  
-🤖 Data Engineering
-🤖 ML Consulting
-🤖 Cloud Integration
-
-How can I assist you today? Are you interested in learning more about our services or do you have specific questions about how AI can transform your business?"""
+                response = "Hello! Welcome to Sugam-AI Solutions. I'm here to help you with our AI services. How can I assist you today?"
             
             elif any(word in message_lower for word in ['service', 'services', 'offer', 'provide']):
-                ai_response = """🚀 Our AI Services at Sugam-AI Solutions:
-
-1️⃣ **AI Prototyping** - Transform your ideas into working AI models
-2️⃣ **Virtual Assistants** - Intelligent chatbots and voice assistants  
-3️⃣ **Data Engineering** - Build robust data pipelines and infrastructure
-4️⃣ **ML Consulting** - Expert guidance on machine learning implementation
-5️⃣ **Cloud Integration** - Seamlessly integrate AI with cloud platforms
-
-🎯 **Specializations**: Finance, Tourism, Retail, Healthcare, Government
-
-Which service interests you most? I can provide detailed information about any of these solutions!"""
+                response = "We offer AI Prototyping, Virtual Assistants, Data Engineering, ML Consulting, and Cloud Integration. Which service interests you?"
             
-            elif any(word in message_lower for word in ['contact', 'email', 'phone', 'address', 'location']):
-                ai_response = """📇 Contact Information - Sugam-AI Solutions
-
-📍 **Address**: Hattisar, Kathmandu 44600, Nepal
-📧 **Email**: hello@sugamaisolutions.com.np  
-📞 **Phone**: +977-1-5551234
-🌐 **Website**: Your current website!
-
-🕐 **Business Hours**: Monday - Friday, 9:00 AM - 6:00 PM
-
-Feel free to reach out for:
-• Free AI consultation
-• Project discussions  
-• Technical support
-• Partnership opportunities
-
-How else can I help you today?"""
+            elif any(word in message_lower for word in ['contact', 'email', 'phone', 'address']):
+                response = "Contact us at: Email: hello@sugamaisolutions.com.np, Phone: +977-1-5551234, Address: Hattisar, Kathmandu 44600, Nepal"
             
-            elif any(word in message_lower for word in ['price', 'cost', 'pricing', 'investment']):
-                ai_response = """💰 Investment in AI Solutions
-
-At Sugam-AI Solutions, we offer customized pricing based on your specific needs:
-
-🔍 **Free Initial Consultation** - Discuss your AI requirements
-📊 **Custom Quotes** - Tailored to your project scope and complexity
-💡 **Flexible Models** - Project-based, retainer, or partnership options
-
-Factors affecting pricing:
-• Project complexity
-• Timeline requirements  
-• Technology stack
-• Ongoing support needs
-
-📞 **Get Your Quote**: Contact us at +977-1-5551234 for a detailed consultation.
-
-What type of AI solution are you considering?"""
+            elif any(word in message_lower for word in ['price', 'cost', 'pricing']):
+                response = "We offer customized pricing based on your project needs. Contact us for a free consultation and quote."
             
             else:
-                ai_response = f"""🤖 Thank you for your message: "{user_message}"
-
-I'm here to help you with information about Sugam-AI Solutions! 
-
-We're a premier AI company based in Kathmandu, Nepal, dedicated to transforming businesses through cutting-edge artificial intelligence.
-
-**Popular Topics**:
-• Our AI services and solutions
-• Industry-specific applications (Finance, Tourism, Retail, Healthcare, Government)
-• Pricing and consultation
-• Technical implementation
-• Partnership opportunities
-
-What specific aspect of AI solutions would you like to explore? I'm here to provide detailed, professional guidance!"""
+                response = "Thank you for your message! I'm here to help with information about Sugam-AI Solutions and our AI services. What would you like to know?"
 
             return Response({
-                'response': ai_response,
+                'response': response,
                 'status': 'success'
             })
 
         except Exception as e:
-            print(f"General Error: {e}")
-            fallback_response = "I apologize, but I'm experiencing technical difficulties. Please contact our team at hello@sugamaisolutions.com.np or call +977-1-5551234 for immediate assistance with your AI solution needs."
-            
+            print(f"Error: {e}")
             return Response({
-                'response': fallback_response,
+                'response': "I apologize, but I'm having technical difficulties. Please contact us at hello@sugamaisolutions.com.np",
                 'status': 'error'
             })

@@ -33,8 +33,6 @@ const ChatBot = () => {
 
   const generateResponse = async (userMessage) => {
     try {
-      console.log('Sending message to backend:', userMessage)
-      
       const response = await fetch('http://localhost:5000/api/chat/', {
         method: 'POST',
         headers: {
@@ -43,47 +41,14 @@ const ChatBot = () => {
         body: JSON.stringify({ message: userMessage }),
       })
 
-      console.log('Response status:', response.status)
-      
       if (!response.ok) {
-        console.error('Response not OK:', response.status, response.statusText)
-        throw new Error(`Failed to get response: ${response.status} ${response.statusText}`)
+        throw new Error('Server error')
       }
 
       const data = await response.json()
-      console.log('Response data:', data)
       return data.response
     } catch (error) {
-      console.error('Detailed error:', error)
-      
-      // Check if it's a connection error
-      if (error.message.includes('Failed to fetch') || error.message.includes('ERR_CONNECTION_REFUSED')) {
-        return `🔌 Service Temporarily Unavailable
-
-Our AI assistant is preparing to assist you! This usually happens when:
-• The system is starting up (wait 10-15 seconds)
-• The backend server is restarting
-
-🔄 **Quick Fix**: Try sending your message again in a moment.
-
-📞 **Immediate Assistance**:
-• Call: +977-1-5551234
-• Email: hello@sugamaisolutions.com.np
-• Location: Hattisar, Kathmandu 44600, Nepal
-
-We're here to help with all your AI solution needs!`
-      }
-      
-      return `🤖 Technical Difficulty
-
-I apologize for the inconvenience. Our team is dedicated to providing you with the best AI solutions experience.
-
-📞 **Contact Us Directly**:
-• Phone: +977-1-5551234
-• Email: hello@sugamaisolutions.com.np
-• Address: Hattisar, Kathmandu 44600, Nepal
-
-We specialize in AI Prototyping, Virtual Assistants, Data Engineering, ML Consulting, and Cloud Integration solutions.`
+      return "I apologize, but I'm having trouble connecting. Please try again or contact us at hello@sugamaisolutions.com.np"
     }
   }
 
