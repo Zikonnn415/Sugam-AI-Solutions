@@ -10,15 +10,16 @@ def test_chatbot_api():
     url = 'http://localhost:5000/api/chat/'
     data = {'message': 'Hello, test message'}
     
+    
     try:
         print(f"Testing POST to {url}")
         print(f"Data: {data}")
-        
+    
         response = requests.post(url, json=data, timeout=10)
         
         print(f"Status Code: {response.status_code}")
         print(f"Headers: {dict(response.headers)}")
-        
+    
         if response.status_code == 200:
             result = response.json()
             print(f"✅ SUCCESS!")
