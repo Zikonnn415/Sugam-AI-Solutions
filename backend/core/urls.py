@@ -2,21 +2,6 @@
 URL routing for the core app.
 
 All paths are relative to /api/ (configured in config/urls.py).
-
-The frontend uses these base URLs (see Contact.jsx, AdminDashboard.jsx, etc.):
-  /api/inquiries/            ContactListView
-  /api/inquiries/<pk>/       ContactDetailView
-  /api/inquiries/<pk>/toggle-review/  ToggleReviewView
-  /api/blogs/                ArticleListView        (frontend key: blogs)
-  /api/blogs/<pk>/           ArticleDetailView
-  /api/case-studies/         ProjectListView        (frontend key: case-studies)
-  /api/case-studies/<pk>/    ProjectDetailView
-  /api/testimonials/         ReviewListView         (frontend key: testimonials)
-  /api/events/               EventListView
-  /api/events/<pk>/          EventDetailView
-  /api/services/             SolutionListView       (frontend key: services)
-  /api/analytics/            StatsView
-  /api/auth/login/           ObtainTokenView
 """
 
 from django.urls import path
@@ -25,7 +10,7 @@ from .views import (
     ContactListView, ContactDetailView, ToggleReviewView,
     ArticleListView, ArticleDetailView,
     ProjectListView, ProjectDetailView,
-    ReviewListView,
+    ReviewListView, ReviewDetailView,
     EventListView, EventDetailView,
     SolutionListView,
     StatsView,
@@ -41,18 +26,19 @@ urlpatterns = [
     path('inquiries/<int:pk>/',                 ContactDetailView.as_view(), name='contact-detail'),
     path('inquiries/<int:pk>/toggle-review/',   ToggleReviewView.as_view(),  name='contact-toggle'),
 
-    # ── blog articles ─────────────────────────────────────────────────────────
+    # ── blog articles (GET public, POST/PUT/DELETE admin) ─────────────────────
     path('blogs/',          ArticleListView.as_view(),   name='article-list'),
     path('blogs/<int:pk>/', ArticleDetailView.as_view(), name='article-detail'),
 
-    # ── case studies / projects ───────────────────────────────────────────────
+    # ── case studies / projects (GET public, POST/PUT/DELETE admin) ───────────
     path('case-studies/',          ProjectListView.as_view(),   name='project-list'),
     path('case-studies/<int:pk>/', ProjectDetailView.as_view(), name='project-detail'),
 
-    # ── customer reviews / testimonials ───────────────────────────────────────
-    path('testimonials/', ReviewListView.as_view(), name='review-list'),
+    # ── testimonials / reviews (GET public, POST/PUT/DELETE admin) ────────────
+    path('testimonials/',          ReviewListView.as_view(),   name='review-list'),
+    path('testimonials/<int:pk>/', ReviewDetailView.as_view(), name='review-detail'),
 
-    # ── promotional events ────────────────────────────────────────────────────
+    # ── promotional events (GET public, POST/PUT/DELETE admin) ────────────────
     path('events/',          EventListView.as_view(),   name='event-list'),
     path('events/<int:pk>/', EventDetailView.as_view(), name='event-detail'),
 
