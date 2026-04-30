@@ -22,58 +22,53 @@ function App() {
   )
 
   useEffect(() => {
-    const syncAdminAuthState = () => {
-      setIsAdminAuthenticated(Boolean(localStorage.getItem('nn_token')))
-    }
-
-    // Listen for custom auth change event (for immediate updates)
-    const handleAuthChange = () => {
-      setIsAdminAuthenticated(Boolean(localStorage.getItem('nn_token')))
-    }
-
-    window.addEventListener('storage', syncAdminAuthState)
-    window.addEventListener('focus', syncAdminAuthState)
-    window.addEventListener('authChange', handleAuthChange)
-    syncAdminAuthState()
-
+    const syncAuth = () => setIsAdminAuthenticated(Boolean(localStorage.getItem('nn_token')))
+    window.addEventListener('storage',    syncAuth)
+    window.addEventListener('focus',      syncAuth)
+    window.addEventListener('authChange', syncAuth)
+    syncAuth()
     return () => {
-      window.removeEventListener('storage', syncAdminAuthState)
-      window.removeEventListener('focus', syncAdminAuthState)
-      window.removeEventListener('authChange', handleAuthChange)
+      window.removeEventListener('storage',    syncAuth)
+      window.removeEventListener('focus',      syncAuth)
+      window.removeEventListener('authChange', syncAuth)
     }
   }, [])
 
   useEffect(() => {
     const pageTitles = {
-      '/': 'Home',
-      '/services': 'Services',
-      '/case-studies': 'Case Studies',
-      '/testimonials': 'Testimonials',
-      '/blog': 'Blog',
-      '/events': 'Events',
-      '/contact': 'Contact',
-      '/admin': 'Admin Dashboard'
+      '/':            'Home',
+      '/services':    'Services',
+      '/case-studies':'Case Studies',
+      '/testimonials':'Testimonials',
+      '/blog':        'Blog',
+      '/events':      'Events',
+      '/contact':     'Contact',
+      '/admin':       'Admin Dashboard',
     }
     const current = pageTitles[location.pathname] || 'Page'
     document.title = `${current} | Sugam-AI Solutions`
   }, [location.pathname])
 
+  // Admin link is intentionally excluded from the main nav
   const navigation = [
-    { label: 'Services', href: '/services' },
-    { label: 'Case Studies', href: '/case-studies' },
-    { label: 'Testimonials', href: '/testimonials' },
-    { label: 'Blog', href: '/blog' },
-    { label: 'Events', href: '/events' },
-    { label: 'Contact', href: '/contact' },
-    { label: 'Admin', href: '/admin' }
+    { label: 'Services',    href: '/services' },
+    { label: 'Case Studies',href: '/case-studies' },
+    { label: 'Testimonials',href: '/testimonials' },
+    { label: 'Blog',        href: '/blog' },
+    { label: 'Events',      href: '/events' },
+    { label: 'Contact',     href: '/contact' },
   ]
 
   return (
-    <div className="min-h-screen flex flex-col" style={{background:'linear-gradient(160deg,#06071a 0%,#0d1130 50%,#080c22 100%)'}}>
-      {/* Header */}
-      <header className="sticky top-0 z-50" style={{background:'rgba(6,7,26,0.92)',backdropFilter:'blur(16px)',borderBottom:'1px solid rgba(99,102,241,0.15)',boxShadow:'0 4px 32px -8px rgba(79,70,229,0.18)'}}>
+    <div className="min-h-screen flex flex-col"
+         style={{ background: 'linear-gradient(160deg,#06071a 0%,#0d1130 50%,#080c22 100%)' }}>
+
+      {/* ── Header ── */}
+      <header className="sticky top-0 z-50"
+              style={{ background: 'rgba(6,7,26,0.92)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(99,102,241,0.15)', boxShadow: '0 4px 32px -8px rgba(79,70,229,0.18)' }}>
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
+
             {/* Logo */}
             <Link to="/" className="flex items-center space-x-3 group">
               <Logo size={38} />
@@ -101,7 +96,7 @@ function App() {
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white transition-colors"
-                style={{background:'rgba(99,102,241,0.1)',border:'1px solid rgba(99,102,241,0.2)'}}
+                style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)' }}
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {isMobileMenuOpen
@@ -115,7 +110,7 @@ function App() {
 
           {/* Mobile Navigation */}
           {isMobileMenuOpen && (
-            <div className="md:hidden py-4" style={{borderTop:'1px solid rgba(99,102,241,0.15)'}}>
+            <div className="md:hidden py-4" style={{ borderTop: '1px solid rgba(99,102,241,0.15)' }}>
               <div className="flex flex-col space-y-1">
                 {navigation.map((item) => (
                   <NavLink
@@ -133,27 +128,29 @@ function App() {
         </nav>
       </header>
 
-      {/* Main Content */}
+      {/* ── Main Content ── */}
       <main className="flex-1">
         <Routes>
-          <Route path="/" element={<Home/>} />
-          <Route path="/services" element={<Services/>} />
-          <Route path="/case-studies" element={<CaseStudies/>} />
-          <Route path="/case-studies/:id" element={<CaseStudyDetail/>} />
-          <Route path="/testimonials" element={<Testimonials/>} />
-          <Route path="/blog" element={<Blog/>} />
-          <Route path="/blog/:id" element={<BlogPost/>} />
-          <Route path="/events" element={<Events/>} />
-          <Route path="/events/:id" element={<EventDetail/>} />
-          <Route path="/contact" element={<Contact/>} />
-          <Route path="/admin" element={<AdminDashboard/>} />
+          <Route path="/"                element={<Home />} />
+          <Route path="/services"        element={<Services />} />
+          <Route path="/case-studies"    element={<CaseStudies />} />
+          <Route path="/case-studies/:id"element={<CaseStudyDetail />} />
+          <Route path="/testimonials"    element={<Testimonials />} />
+          <Route path="/blog"            element={<Blog />} />
+          <Route path="/blog/:id"        element={<BlogPost />} />
+          <Route path="/events"          element={<Events />} />
+          <Route path="/events/:id"      element={<EventDetail />} />
+          <Route path="/contact"         element={<Contact />} />
+          <Route path="/admin"           element={<AdminDashboard />} />
         </Routes>
       </main>
 
-      {/* Footer */}
-      <footer className="mt-16" style={{background:'rgba(6,7,26,0.95)',borderTop:'1px solid rgba(99,102,241,0.15)'}}>
+      {/* ── Footer ── */}
+      <footer className="mt-16"
+              style={{ background: 'rgba(6,7,26,0.95)', borderTop: '1px solid rgba(99,102,241,0.15)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-14">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
+
             {/* Brand */}
             <div className="col-span-1 md:col-span-2">
               <div className="flex items-center space-x-3 mb-5">
@@ -174,9 +171,12 @@ function App() {
             <div>
               <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-5">Navigation</h3>
               <ul className="space-y-3 text-sm">
-                {['Services','Case Studies','Testimonials','Blog','Contact'].map(l => (
+                {['Services', 'Case Studies', 'Testimonials', 'Blog', 'Events', 'Contact'].map((l) => (
                   <li key={l}>
-                    <Link to={`/${l.toLowerCase().replace(' ','-')}`} className="text-slate-500 hover:text-indigo-400 transition-colors">
+                    <Link
+                      to={`/${l.toLowerCase().replace(' ', '-')}`}
+                      className="text-slate-500 hover:text-indigo-400 transition-colors"
+                    >
                       {l}
                     </Link>
                   </li>
@@ -184,20 +184,35 @@ function App() {
               </ul>
             </div>
 
-            {/* Services */}
+            {/* Services + Admin Portal */}
             <div>
               <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-5">Services</h3>
-              <ul className="space-y-3 text-sm text-slate-500">
-                {['AI Prototyping','Virtual Assistant','Data Engineering','ML Consulting','Cloud Integration'].map(s => (
+              <ul className="space-y-3 text-sm text-slate-500 mb-8">
+                {['AI Prototyping', 'Virtual Assistant', 'Data Engineering', 'ML Consulting', 'Cloud Integration'].map((s) => (
                   <li key={s}>{s}</li>
                 ))}
               </ul>
+
+              {/* Admin portal — discreet, below Services */}
+              <div className="pt-4" style={{ borderTop: '1px solid rgba(99,102,241,0.1)' }}>
+                <p className="text-xs text-slate-700 uppercase tracking-wider mb-2 font-semibold">Staff Access</p>
+                <Link
+                  to="/admin"
+                  className="inline-flex items-center gap-1.5 text-xs text-slate-600 hover:text-indigo-400 transition-colors group"
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-slate-700 group-hover:bg-indigo-500 transition-colors" />
+                  {isAdminAuthenticated ? '⚙ Admin Dashboard' : 'Admin Login'}
+                </Link>
+              </div>
             </div>
           </div>
 
-          <div className="mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4" style={{borderTop:'1px solid rgba(99,102,241,0.1)'}}>
+          <div className="mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
+               style={{ borderTop: '1px solid rgba(99,102,241,0.1)' }}>
             <p className="text-sm text-slate-600">&copy; {new Date().getFullYear()} Sugam-AI Solutions. All rights reserved.</p>
-            <p className="text-sm text-slate-600">Built by <span className="text-indigo-400 font-medium">Sugam Shrestha</span> · Kathmandu, Nepal</p>
+            <p className="text-sm text-slate-600">
+              Built by <span className="text-indigo-400 font-medium">Sugam Shrestha</span> · Kathmandu, Nepal
+            </p>
           </div>
         </div>
       </footer>
