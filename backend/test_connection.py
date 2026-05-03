@@ -14,6 +14,7 @@ def test_chatbot_api():
     try:
         print(f"Testing POST to {url}")
         print(f"Data: {data}")
+        
         response = requests.post(url, json=data, timeout=10)
     
         print(f"Status Code: {response.status_code}")
