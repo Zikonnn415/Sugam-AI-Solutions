@@ -7,7 +7,7 @@ const ChatBot = () => {
   const [messages, setMessages] = useState([
     {
       id: 1,
-      text: "Hello! I'm your AI assistant from Sugam-AI Solutions. How can I help you today?",
+      text: "Hello! Welcome to Sugam-AI Solutions. I'm here to help you with information about our AI services. How can I assist you today?",
       sender: 'bot',
       timestamp: new Date()
     }
@@ -16,6 +16,99 @@ const ChatBot = () => {
   const [isTyping, setIsTyping] = useState(false)
   const messagesEndRef = useRef(null)
   const inputRef = useRef(null)
+
+  // Professional responses based on keywords
+  const getBotResponse = (userMessage) => {
+    const msg = userMessage.toLowerCase()
+    
+    // Greetings
+    if (msg.match(/\b(hello|hi|hey|greetings|good morning|good afternoon|good evening)\b/)) {
+      return "Hello! Welcome to Sugam-AI Solutions. I'm your virtual assistant and I'm here to help you explore our AI services. What would you like to know about?"
+    }
+    
+    // Services inquiry
+    if (msg.match(/\b(service|services|offer|provide|do you do|what do you|solutions)\b/)) {
+      return "We offer comprehensive AI solutions including: AI Prototyping, Virtual Assistants, Data Engineering, ML Consulting, and Cloud Integration. We specialize in Finance, Tourism, Retail, Healthcare, and Government sectors. Which service would you like to learn more about?"
+    }
+    
+    // Contact information
+    if (msg.match(/\b(contact|email|phone|call|reach|address|location|where are you)\b/)) {
+      return "You can reach us at:\n📧 Email: hello@sugamaisolutions.com.np\n📞 Phone: +977-1-5551234\n📍 Address: Hattisar, Kathmandu 44600, Nepal\n\nWe're available Monday to Friday, 9:00 AM - 6:00 PM."
+    }
+    
+    // Pricing
+    if (msg.match(/\b(price|pricing|cost|how much|fees|budget|charge|payment)\b/)) {
+      return "We offer customized pricing based on your specific project requirements. We provide free initial consultations to understand your needs and provide a tailored quote. Please contact us at +977-1-5551234 or hello@sugamaisolutions.com.np for detailed pricing information."
+    }
+    
+    // About company
+    if (msg.match(/\b(about|company|who are you|sugam-ai|your company|tell me about)\b/)) {
+      return "Sugam-AI Solutions is a leading AI company based in Kathmandu, Nepal. We help businesses transform through cutting-edge artificial intelligence solutions. Our mission is to empower Nepali businesses with world-class AI technology."
+    }
+    
+    // Team/Founder
+    if (msg.match(/\b(team|founder|sugam shrestha|who built|who made|developer)\b/)) {
+      return "Sugam-AI Solutions was founded by Sugam Shrestha, a passionate technologist dedicated to bringing AI innovation to Nepal. Our team consists of skilled AI engineers, data scientists, and consultants committed to delivering excellence."
+    }
+    
+    // Case studies/portfolio
+    if (msg.match(/\b(case study|portfolio|work|project|client|example|previous)\b/)) {
+      return "We have successfully delivered AI solutions across various sectors. Visit our Case Studies page to see detailed examples of our work in Finance, Tourism, Retail, Healthcare, and Government sectors."
+    }
+    
+    // Blog/Articles
+    if (msg.match(/\b(blog|article|news|read|learn|knowledge)\b/)) {
+      return "Check out our Blog section for insightful articles about AI trends, case studies, and industry updates. We regularly share valuable content to help you stay informed about the latest in artificial intelligence."
+    }
+    
+    // Testimonials
+    if (msg.match(/\b(testimonial|review|feedback|client say|customers|rating)\b/)) {
+      return "Our clients appreciate our professional approach and quality solutions. Visit our Testimonials page to read what our clients say about working with Sugam-AI Solutions."
+    }
+    
+    // Events
+    if (msg.match(/\b(event|events|webinar|seminar|workshop|upcoming)\b/)) {
+      return "We regularly host and participate in AI events, webinars, and workshops. Visit our Events page to see upcoming activities and register for our latest sessions."
+    }
+    
+    // AI/Technology questions
+    if (msg.match(/\b(ai|artificial intelligence|machine learning|ml|technology|how does it work)\b/)) {
+      return "Artificial Intelligence (AI) and Machine Learning (ML) are technologies that enable computers to learn from data and make intelligent decisions. At Sugam-AI Solutions, we use these technologies to automate processes, predict outcomes, and create intelligent systems for businesses."
+    }
+    
+    // Industries/Sectors
+    if (msg.match(/\b(finance|tourism|retail|healthcare|government|sector|industry|field)\b/)) {
+      return "We specialize in multiple sectors:\n\n🏦 Finance - Fraud detection, risk analysis, automated trading\n✈️ Tourism - Personalized recommendations, chatbots, booking optimization\n🛍️ Retail - Inventory management, customer analytics, demand forecasting\n🏥 Healthcare - Diagnostic assistance, patient management, medical imaging\n🏛️ Government - Smart governance, data analytics, citizen services\n\nWhich sector interests you?"
+    }
+    
+    // Careers/Jobs
+    if (msg.match(/\b(career|job|work|hiring|join|position|employment|opportunity)\b/)) {
+      return "We're always looking for talented individuals passionate about AI. Send your resume to hello@sugamaisolutions.com.np with the subject line 'Career Application'. We'd love to hear from you!"
+    }
+    
+    // Support/Help
+    if (msg.match(/\b(help|support|assist|problem|issue|error|not working)\b/)) {
+      return "I'm here to help! For technical support or any issues, please contact us directly:\n\n📧 Email: hello@sugamaisolutions.com.np\n📞 Phone: +977-1-5551234\n\nOur support team will assist you promptly."
+    }
+    
+    // Time/Hours
+    if (msg.match(/\b(hour|hours|time|open|when|available|working hours)\b/)) {
+      return "Our business hours are:\nMonday - Friday: 9:00 AM - 6:00 PM\nSaturday - Sunday: Closed\n\nYou can contact us anytime via email at hello@sugamaisolutions.com.np and we'll respond within 24 hours."
+    }
+    
+    // Thank you
+    if (msg.match(/\b(thank|thanks|thank you|appreciate|grateful)\b/)) {
+      return "You're welcome! I'm glad I could help. If you have any other questions about Sugam-AI Solutions or our services, feel free to ask. Have a great day!"
+    }
+    
+    // Goodbye
+    if (msg.match(/\b(bye|goodbye|see you|talk later|exit|close)\b/)) {
+      return "Thank you for chatting with us! Feel free to reach out anytime if you have questions. Have a wonderful day! 👋"
+    }
+    
+    // Default response
+    return "Thank you for your message! I'm here to help with information about Sugam-AI Solutions and our AI services. You can ask me about our services, contact information, pricing, or anything else about the company. What would you like to know?"
+  }
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
@@ -30,27 +123,6 @@ const ChatBot = () => {
       inputRef.current?.focus()
     }
   }, [isOpen, isMinimized])
-
-  const generateResponse = async (userMessage) => {
-    try {
-      const response = await fetch('http://localhost:5000/api/chat/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ message: userMessage }),
-      })
-
-      if (!response.ok) {
-        throw new Error('Server error')
-      }
-
-      const data = await response.json()
-      return data.response
-    } catch (error) {
-      return "I apologize, but I'm having trouble connecting. Please try again or contact us at hello@sugamaisolutions.com.np"
-    }
-  }
 
   const handleSendMessage = async (e) => {
     e.preventDefault()
@@ -68,8 +140,9 @@ const ChatBot = () => {
     setInputMessage('')
     setIsTyping(true)
 
-    try {
-      const botResponse = await generateResponse(inputMessage.trim())
+    // Simulate typing delay for natural feel
+    setTimeout(() => {
+      const botResponse = getBotResponse(inputMessage.trim())
       
       const botMsg = {
         id: Date.now() + 1,
@@ -79,11 +152,8 @@ const ChatBot = () => {
       }
 
       setMessages(prev => [...prev, botMsg])
-    } catch (error) {
-      console.error('Error sending message:', error)
-    } finally {
       setIsTyping(false)
-    }
+    }, 500)
   }
 
   const formatTime = (date) => {
