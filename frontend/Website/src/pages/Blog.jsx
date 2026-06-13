@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Calendar, ArrowRight } from 'lucide-react'
+import { RevealStagger } from '../components/Reveal.jsx'
 
 export default function Blog(){
   const [items, setItems] = useState([])
@@ -15,10 +16,10 @@ export default function Blog(){
 
   return (
     <div className="section-end page-shell">
-      <section className="py-12 hero-gradient text-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="heading-secondary mb-2">Insights & Articles</h1>
-          <p className="text-slate-400 mt-2">Perspectives, guides, and updates from the Sugam-AI Solutions team.</p>
+      <section className="hero-gradient hero-under-nav pb-12 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hero-entrance">
+          <h1 className="heading-secondary mb-2 animate-fade-in-up">Insights & Articles</h1>
+          <p className="text-slate-400 mt-2 animate-fade-in-up">Perspectives, guides, and updates from the Sugam-AI Solutions team.</p>
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
@@ -27,7 +28,7 @@ export default function Blog(){
             {[...Array(6)].map((_,i)=>(<div key={i} className="card p-6 h-48"/>))}
           </div>
         ) : (
-          <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+          <RevealStagger as="ul" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map(p=>(
               <li key={p.id} className="card flex flex-col overflow-hidden">
                 {p.cover_image_url && (
@@ -41,14 +42,14 @@ export default function Blog(){
                   <h3 className="text-slate-200 font-semibold mb-2 leading-snug">{p.title}</h3>
                   {p.excerpt && <p className="text-slate-500 text-sm flex-1 leading-relaxed">{p.excerpt}</p>}
                   <div className="mt-4">
-                    <Link className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors" to={`/blog/${p.id}`}>
+                    <Link className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 text-sm font-medium link-hover-lift" to={`/blog/${p.id}`}>
                       Read more <ArrowRight className="w-3.5 h-3.5"/>
                     </Link>
                   </div>
                 </div>
               </li>
             ))}
-          </ul>
+          </RevealStagger>
         )}
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { Building2, Hospital, Hotel, ShoppingCart, Landmark, Factory, ChevronRight, Code, Cpu, Brain, Database, Cloud, Shield, Workflow, BarChart3, Cog, Server, Camera, Bot, Rocket, ImageIcon } from 'lucide-react'
+import { Reveal, RevealStagger } from '../components/Reveal.jsx'
 
 export default function Services() {
   const [services, setServices] = useState([])
@@ -55,13 +56,13 @@ export default function Services() {
   return (
     <div className="min-h-screen page-shell">
       {/* Hero */}
-      <section className="hero-gradient py-14 lg:py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h1 className="heading-primary mb-5">Our AI Services</h1>
-          <p className="text-slate-400 mb-8 max-w-2xl mx-auto leading-relaxed">
+      <section className="hero-gradient hero-under-nav pb-14 lg:pb-20">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center hero-entrance">
+          <h1 className="heading-primary mb-5 animate-fade-in-up">Our AI Services</h1>
+          <p className="text-slate-400 mb-8 max-w-2xl mx-auto leading-relaxed animate-fade-in-up">
             End-to-end AI capabilities — from rapid prototyping to enterprise deployments — designed to deliver measurable business value.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up">
             <Link to="/contact" className="btn-primary">Get Started Today</Link>
             <Link to="/case-studies" className="btn-outline">View Our Work</Link>
           </div>
@@ -71,16 +72,16 @@ export default function Services() {
       {/* Services Grid */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <h2 className="heading-secondary mb-3">Comprehensive AI Solutions</h2>
             <p className="text-slate-400 max-w-xl mx-auto">Purpose-built services to tackle your most complex challenges with intelligent automation.</p>
-          </div>
+          </Reveal>
           {loading ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7 animate-pulse">
               {[...Array(6)].map((_,i)=>(<div key={i} className="card h-72"/>))}
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-7 reveal-stagger">
+            <RevealStagger className="grid md:grid-cols-2 lg:grid-cols-3 gap-7">
               {services.map((service, i) => {
                 const Icon = resolveIcon(service.icon || service.icon_name, service.title)
                 return (
@@ -106,7 +107,7 @@ export default function Services() {
                   </div>
                 )
               })}
-            </div>
+            </RevealStagger>
           )}
         </div>
       </section>
@@ -114,11 +115,11 @@ export default function Services() {
       {/* Process */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <h2 className="heading-secondary mb-3">Our Delivery Process</h2>
             <p className="text-slate-400 max-w-xl mx-auto">A proven six-step methodology that takes you from idea to production with confidence.</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+          </Reveal>
+          <RevealStagger className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {steps.map((s,i)=>(
               <div key={i} className="card p-7 flex gap-5">
                 <div className="step-number flex-shrink-0">{s.step}</div>
@@ -128,18 +129,18 @@ export default function Services() {
                 </div>
               </div>
             ))}
-          </div>
+          </RevealStagger>
         </div>
       </section>
 
       {/* Industries */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <h2 className="heading-secondary mb-3">Industry Expertise</h2>
             <p className="text-slate-400 max-w-xl mx-auto">Tailored AI solutions for each sector's unique opportunities and challenges.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 reveal-stagger">
+          </Reveal>
+          <RevealStagger className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5" step={60}>
             {industries.map(({name,icon:Icon,items},i)=>(
               <div key={i} className="card p-5 text-center">
                 <div className="icon-badge w-11 h-11 flex items-center justify-center mx-auto mb-3">
@@ -151,14 +152,14 @@ export default function Services() {
                 </ul>
               </div>
             ))}
-          </div>
+          </RevealStagger>
         </div>
       </section>
 
       {/* CTA */}
       <section className="py-16">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="card-elevated p-10 text-center relative overflow-hidden">
+          <Reveal className="card-elevated p-10 text-center relative overflow-hidden" variant="scale">
             <div className="absolute inset-0" style={{background:'radial-gradient(ellipse at 50% 0%,rgba(99,102,241,0.2),transparent 70%)'}}/>
             <h2 className="text-2xl md:text-3xl font-bold text-slate-100 mb-4 relative">Ready to Get Started?</h2>
             <p className="text-slate-400 mb-7 relative">Let's discuss how AI can solve your business challenges and unlock new growth.</p>
@@ -166,7 +167,7 @@ export default function Services() {
               <Link to="/contact" className="btn-primary">Book a Free Consultation</Link>
               <Link to="/testimonials" className="btn-outline">Client Success Stories</Link>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
     </div>

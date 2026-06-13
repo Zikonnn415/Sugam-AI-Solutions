@@ -2,6 +2,8 @@ import { useEffect, useState } from 'react'
 import { Routes, Route, Link, NavLink, useLocation } from 'react-router-dom'
 import Logo from './components/Logo.jsx'
 import ChatBot from './components/ChatBot.jsx'
+import ScrollToTop from './components/ScrollToTop.jsx'
+import { Reveal } from './components/Reveal.jsx'
 import Home from './pages/Home.jsx'
 import Services from './pages/Services.jsx'
 import CaseStudies from './pages/CaseStudies.jsx'
@@ -20,6 +22,7 @@ function App() {
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState(
     Boolean(localStorage.getItem('nn_token'))
   )
+  const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
     const syncAuth = () => setIsAdminAuthenticated(Boolean(localStorage.getItem('nn_token')))
@@ -32,6 +35,20 @@ function App() {
       window.removeEventListener('focus',      syncAuth)
       window.removeEventListener('authChange', syncAuth)
     }
+  }, [])
+
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [location.pathname])
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 24)
+    }
+
+    window.addEventListener('scroll', handleScroll, { passive: true })
+    handleScroll()
+    return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
   useEffect(() => {
@@ -60,45 +77,50 @@ function App() {
   ]
 
   return (
-    <div className="min-h-screen flex flex-col"
-         style={{ background: 'linear-gradient(160deg,#06071a 0%,#0d1130 50%,#080c22 100%)' }}>
+    <div className="min-h-screen flex flex-col page-background">
+      <ScrollToTop />
 
       {/* ── Header ── */}
-      <header className="sticky top-0 z-50"
-              style={{ background: 'rgba(6,7,26,0.92)', backdropFilter: 'blur(16px)', borderBottom: '1px solid rgba(99,102,241,0.15)', boxShadow: '0 4px 32px -8px rgba(79,70,229,0.18)' }}>
+      <header className={`site-header ${isScrolled ? 'site-header-scrolled' : ''}`}>
         <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
+          <div className="flex items-center justify-between gap-3 lg:gap-6 py-3 sm:py-3.5 lg:py-4">
 
             {/* Logo */}
-            <Link to="/" className="flex items-center space-x-3 group">
-              <Logo size={38} />
-              <span className="text-2xl font-bold text-gradient">Sugam-AI Solutions</span>
+            <Link to="/" className="flex items-center group shrink-0 min-w-0 max-w-[46%] sm:max-w-none">
+              <Logo variant="header" className="h-14 sm:h-16 md:h-20 lg:h-24 w-auto" />
             </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center space-x-1">
-              {navigation.map((item) => (
-                <NavLink
-                  key={item.href}
-                  to={item.href}
-                  className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
-                >
-                  {item.label}
-                </NavLink>
-              ))}
+            {/* Desktop Navigation — centered pill */}
+            <div className="hidden lg:flex flex-1 justify-center px-2 min-w-0">
+              <div className="nav-pill">
+                {navigation.map((item) => (
+                  <NavLink
+                    key={item.href}
+                    to={item.href}
+                    className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
+                  >
+                    {item.label}
+                  </NavLink>
+                ))}
+              </div>
             </div>
 
             {/* CTA + Mobile toggle */}
-            <div className="flex items-center gap-3">
-              <Link to={isAdminAuthenticated ? "/admin" : "/contact"} className="hidden md:inline-flex btn-accent text-xs px-4 py-2">
+            <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+              <Link
+                to={isAdminAuthenticated ? '/admin' : '/contact'}
+                className="hidden lg:inline-flex btn-nav-cta"
+              >
                 {isAdminAuthenticated ? 'Admin Dashboard' : 'Get Started'}
               </Link>
               <button
+                type="button"
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 rounded-lg text-slate-400 hover:text-white transition-colors"
-                style={{ background: 'rgba(99,102,241,0.1)', border: '1px solid rgba(99,102,241,0.2)' }}
+                className="lg:hidden nav-menu-btn"
+                aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                aria-expanded={isMobileMenuOpen}
               >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   {isMobileMenuOpen
                     ? <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
                     : <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
@@ -108,21 +130,28 @@ function App() {
             </div>
           </div>
 
-          {/* Mobile Navigation */}
+          {/* Mobile / tablet navigation */}
           {isMobileMenuOpen && (
-            <div className="md:hidden py-4" style={{ borderTop: '1px solid rgba(99,102,241,0.15)' }}>
-              <div className="flex flex-col space-y-1">
+            <div className="lg:hidden mobile-nav-panel pb-4">
+              <div className="nav-pill nav-pill-mobile flex flex-col">
                 {navigation.map((item) => (
                   <NavLink
                     key={item.href}
                     to={item.href}
-                    className={({ isActive }) => `nav-link ${isActive ? 'active' : ''} px-4 py-3 rounded-lg`}
+                    className={({ isActive }) => `nav-link nav-link-mobile ${isActive ? 'active' : ''}`}
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     {item.label}
                   </NavLink>
                 ))}
               </div>
+              <Link
+                to={isAdminAuthenticated ? '/admin' : '/contact'}
+                className="btn-nav-cta w-full justify-center mt-3 lg:hidden"
+                onClick={() => setIsMobileMenuOpen(false)}
+              >
+                {isAdminAuthenticated ? 'Admin Dashboard' : 'Get Started'}
+              </Link>
             </div>
           )}
         </nav>
@@ -152,10 +181,9 @@ function App() {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-10">
 
             {/* Brand */}
-            <div className="col-span-1 md:col-span-2">
-              <div className="flex items-center space-x-3 mb-5">
-                <Logo size={34} />
-                <span className="text-xl font-bold text-gradient">Sugam-AI Solutions</span>
+            <Reveal as="div" className="col-span-1 md:col-span-2" variant="up">
+              <div className="mb-5">
+                <Logo variant="footer" className="h-16 sm:h-[4.5rem] md:h-20 w-auto" />
               </div>
               <p className="text-slate-400 mb-5 max-w-md leading-relaxed text-sm">
                 Empowering Nepali businesses with cutting-edge AI solutions. We specialize in finance, tourism, retail, healthcare, and government transformation.
@@ -165,27 +193,27 @@ function App() {
                 <p>📞 +977-1-5551234</p>
                 <p>✉️ hello@sugamaisolutions.com.np</p>
               </div>
-            </div>
+            </Reveal>
 
             {/* Quick Links */}
-            <div>
+            <Reveal as="div" variant="up" delay={80}>
               <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-5">Navigation</h3>
               <ul className="space-y-3 text-sm">
                 {['Services', 'Case Studies', 'Testimonials', 'Blog', 'Events', 'Contact'].map((l) => (
                   <li key={l}>
                     <Link
                       to={`/${l.toLowerCase().replace(' ', '-')}`}
-                      className="text-slate-500 hover:text-indigo-400 transition-colors"
+                      className="text-slate-500 hover:text-indigo-400 link-hover"
                     >
                       {l}
                     </Link>
                   </li>
                 ))}
               </ul>
-            </div>
+            </Reveal>
 
             {/* Services + Admin Portal */}
-            <div>
+            <Reveal as="div" variant="up" delay={160}>
               <h3 className="text-sm font-semibold text-slate-300 uppercase tracking-wider mb-5">Services</h3>
               <ul className="space-y-3 text-sm text-slate-500 mb-8">
                 {['AI Prototyping', 'Virtual Assistant', 'Data Engineering', 'ML Consulting', 'Cloud Integration'].map((s) => (
@@ -204,16 +232,16 @@ function App() {
                   {isAdminAuthenticated ? '⚙ Admin Dashboard' : 'Admin Login'}
                 </Link>
               </div>
-            </div>
+            </Reveal>
           </div>
 
-          <div className="mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4"
+          <Reveal className="mt-12 pt-8 flex flex-col md:flex-row items-center justify-between gap-4" variant="fade"
                style={{ borderTop: '1px solid rgba(99,102,241,0.1)' }}>
             <p className="text-sm text-slate-600">&copy; {new Date().getFullYear()} Sugam-AI Solutions. All rights reserved.</p>
             <p className="text-sm text-slate-600">
               Built by <span className="text-indigo-400 font-medium">Sugam Shrestha</span> · Kathmandu, Nepal
             </p>
-          </div>
+          </Reveal>
         </div>
       </footer>
 

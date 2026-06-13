@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CalendarDays, ArrowRight } from 'lucide-react'
+import { RevealStagger } from '../components/Reveal.jsx'
 
 export default function Events(){
   const [items, setItems] = useState([])
@@ -15,10 +16,10 @@ export default function Events(){
 
   return (
     <div className="section-end page-shell">
-      <section className="py-12 hero-gradient text-center">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="heading-secondary mb-2">Events & Workshops</h1>
-          <p className="text-slate-400 mt-2">Join our upcoming talks, webinars, and hands-on AI workshops.</p>
+      <section className="hero-gradient hero-under-nav pb-12 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hero-entrance">
+          <h1 className="heading-secondary mb-2 animate-fade-in-up">Events & Workshops</h1>
+          <p className="text-slate-400 mt-2 animate-fade-in-up">Join our upcoming talks, webinars, and hands-on AI workshops.</p>
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
@@ -27,7 +28,7 @@ export default function Events(){
             {[...Array(6)].map((_,i)=>(<div key={i} className="card p-6 h-36"/>))}
           </div>
         ) : (
-          <ul className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+          <RevealStagger as="ul" className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map(e=>{
               const d = new Date(e.date)
               return (
@@ -41,7 +42,7 @@ export default function Events(){
                     <h3 className="text-slate-200 font-semibold mb-2 leading-snug">{e.title}</h3>
                     {e.description && <p className="text-slate-500 text-sm line-clamp-2">{e.description}</p>}
                     <div className="mt-3">
-                      <Link className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 text-sm font-medium transition-colors" to={`/events/${e.id}`}>
+                      <Link className="inline-flex items-center gap-1.5 text-indigo-400 hover:text-indigo-300 text-sm font-medium link-hover-lift" to={`/events/${e.id}`}>
                         Details <ArrowRight className="w-3.5 h-3.5"/>
                       </Link>
                     </div>
@@ -49,7 +50,7 @@ export default function Events(){
                 </li>
               )
             })}
-          </ul>
+          </RevealStagger>
         )}
       </div>
     </div>

@@ -1,5 +1,15 @@
 import { useEffect, useState } from 'react'
 import { Quote } from 'lucide-react'
+import { RevealStagger } from '../components/Reveal.jsx'
+
+function initialsFromName(name = ''){
+  return name
+    .split(' ')
+    .filter(Boolean)
+    .slice(0, 2)
+    .map((part) => part[0].toUpperCase())
+    .join('')
+}
 
 export default function Testimonials(){
   const [items, setItems] = useState([])
@@ -14,10 +24,10 @@ export default function Testimonials(){
 
   return (
     <div className="section-end page-shell">
-      <section className="py-12 text-center hero-gradient">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h1 className="heading-secondary mb-2">Client Testimonials</h1>
-          <p className="text-slate-400 mt-2 max-w-xl mx-auto">Genuine feedback from the partners we've had the privilege of working with.</p>
+      <section className="hero-gradient hero-under-nav pb-12 text-center">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 hero-entrance">
+          <h1 className="heading-secondary mb-2 animate-fade-in-up">Client Testimonials</h1>
+          <p className="text-slate-400 mt-2 max-w-xl mx-auto animate-fade-in-up">Genuine feedback from the partners we've had the privilege of working with.</p>
         </div>
       </section>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
@@ -26,15 +36,20 @@ export default function Testimonials(){
             {[...Array(6)].map((_,i)=>(<div key={i} className="card p-6 h-44"/>))}
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 reveal-stagger">
+          <RevealStagger className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((t)=>(
               <div key={t.id} className="card p-7 flex flex-col">
                 <Quote className="w-7 h-7 text-indigo-600 mb-4 opacity-60"/>
                 <p className="text-slate-300 text-sm leading-relaxed flex-1 mb-5">{t.text}</p>
                 <div className="flex items-center justify-between mt-auto pt-4" style={{borderTop:'1px solid rgba(99,102,241,0.12)'}}>
-                  <div>
-                    <div className="text-slate-200 font-semibold text-sm">{t.author}</div>
-                    {t.company && <div className="text-xs text-slate-500">{t.company}</div>}
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-full bg-slate-900 ring-1 ring-slate-700 flex items-center justify-center text-sm font-semibold text-slate-100">
+                      {initialsFromName(t.author)}
+                    </div>
+                    <div className="text-left">
+                      <div className="text-slate-200 font-semibold text-sm">{t.author}</div>
+                      {t.company && <div className="text-xs text-slate-500">{t.company}</div>}
+                    </div>
                   </div>
                   <div className="flex gap-0.5">
                     {Array.from({length:5}).map((_,i)=>(
@@ -44,7 +59,7 @@ export default function Testimonials(){
                 </div>
               </div>
             ))}
-          </div>
+          </RevealStagger>
         )}
       </div>
     </div>

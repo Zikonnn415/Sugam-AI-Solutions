@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { MapPin, Phone, Mail, Clock, CheckCircle } from 'lucide-react'
+import { Reveal, RevealStagger } from '../components/Reveal.jsx'
 
 const API = 'http://127.0.0.1:8000/api/inquiries/'
 
@@ -9,20 +10,59 @@ export default function Contact() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [errors, setErrors] = useState({})
 
+  const getFieldError = (key, value) => {
+    if (key === 'name') {
+      if (!value.trim()) return 'Full name is required'
+    }
+
+    if (key === 'email') {
+      if (!value.trim()) return 'Email address is required'
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return 'Please enter a valid email'
+    }
+
+    if (key === 'job_details') {
+      if (!value.trim()) return 'Please describe your project'
+      if (value.trim().length < 20) return 'Please provide at least 20 characters of detail'
+    }
+
+    if (key === 'phone' && value.trim() && !/^[\+]?[0-9\s\-\(\)]{10,}$/.test(value)) {
+      return 'Please enter a valid phone number'
+    }
+
+    return ''
+  }
+
   const onChange = e => {
     const { name, value } = e.target
-    setForm({...form, [name]: value})
-    if (errors[name]) setErrors({...errors, [name]: ''})
+    setForm(prev => ({ ...prev, [name]: value }))
+    if (errors[name]) {
+      const errorMsg = getFieldError(name, value)
+      setErrors(prev => {
+        const next = { ...prev }
+        if (errorMsg) next[name] = errorMsg
+        else delete next[name]
+        return next
+      })
+    }
+  }
+
+  const onBlur = e => {
+    const { name, value } = e.target
+    const errorMsg = getFieldError(name, value)
+    setErrors(prev => {
+      const next = { ...prev }
+      if (errorMsg) next[name] = errorMsg
+      else delete next[name]
+      return next
+    })
   }
 
   const validateForm = () => {
     const errs = {}
-    if (!form.name.trim()) errs.name = 'Full name is required'
-    if (!form.email.trim()) errs.email = 'Email address is required'
-    else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errs.email = 'Please enter a valid email'
-    if (!form.job_details.trim()) errs.job_details = 'Please describe your project'
-    else if (form.job_details.trim().length < 20) errs.job_details = 'Please provide at least 20 characters of detail'
-    if (form.phone && !/^[\+]?[0-9\s\-\(\)]{10,}$/.test(form.phone)) errs.phone = 'Please enter a valid phone number'
+    Object.entries(form).forEach(([key, value]) => {
+      const errorMsg = getFieldError(key, value)
+      if (errorMsg) errs[key] = errorMsg
+    })
     setErrors(errs)
     return Object.keys(errs).length === 0
   }
@@ -59,14 +99,14 @@ export default function Contact() {
   return (
     <div className="max-w-5xl mx-auto section-end page-shell px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <section className="py-12 text-center">
-        <h1 className="heading-secondary mb-3">Let's Build Something Together</h1>
-        <p className="text-slate-400 max-w-xl mx-auto">Tell us about your project and we'll get back to you within 24 hours with a personalised plan.</p>
+      <section className="py-12 text-center hero-entrance">
+        <h1 className="heading-secondary mb-3 animate-fade-in-up">Let's Build Something Together</h1>
+        <p className="text-slate-400 max-w-xl mx-auto animate-fade-in-up">Tell us about your project and we'll get back to you within 24 hours with a personalised plan.</p>
       </section>
 
       <div className="grid md:grid-cols-5 gap-10">
         {/* Form */}
-        <div className="md:col-span-3 card p-8">
+        <Reveal className="md:col-span-3 card p-8" variant="left">
           <h2 className="text-lg font-semibold text-slate-200 mb-6">Send a Message</h2>
 
           {status === 'success' && (
@@ -79,13 +119,13 @@ export default function Contact() {
             <div className="alert-error mb-6">Submission failed. Please try again or email us directly.</div>
           )}
 
-          <form onSubmit={onSubmit} className="space-y-5">
+          <form onSubmit={onSubmit} noValidate className="space-y-5">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               {formFields.map(({ key, label, type, required }) => (
                 <div key={key}>
                   <label className="form-label">{label}{required && <span className="text-red-400 ml-1">*</span>}</label>
                   <input
-                    name={key} value={form[key]} onChange={onChange} type={type}
+                    name={key} value={form[key]} onChange={onChange} onBlur={onBlur} type={type}
                     placeholder={type === 'email' ? 'you@company.com' : `Enter ${label.toLowerCase()}`}
                     className={`form-input${errors[key] ? ' border-red-500' : ''}`}
                   />
@@ -96,7 +136,7 @@ export default function Contact() {
             <div>
               <label className="form-label">Project Details <span className="text-red-400">*</span></label>
               <textarea
-                name="job_details" value={form.job_details} onChange={onChange}
+                name="job_details" value={form.job_details} onChange={onChange} onBlur={onBlur}
                 className={`form-textarea h-32${errors.job_details ? ' border-red-500' : ''}`}
                 placeholder="Describe your project goals, timeline, and any specific challenges..."
               />
@@ -107,10 +147,10 @@ export default function Contact() {
               {isSubmitting ? <><span className="loading-spinner mr-2"/>Sending...</> : 'Send Message →'}
             </button>
           </form>
-        </div>
+        </Reveal>
 
         {/* Sidebar */}
-        <div className="md:col-span-2 space-y-5 reveal-stagger">
+        <RevealStagger className="md:col-span-2 space-y-5" step={100}>
           <div className="card p-7">
             <h3 className="text-base font-semibold text-slate-200 mb-5">Contact Information</h3>
             <div className="space-y-5">
@@ -145,7 +185,7 @@ export default function Contact() {
               ))}
             </ul>
           </div>
-        </div>
+        </RevealStagger>
       </div>
     </div>
   )

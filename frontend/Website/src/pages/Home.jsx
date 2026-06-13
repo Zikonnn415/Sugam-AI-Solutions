@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import { Rocket, Bot, LineChart, Building2, Hotel, Hospital, ShoppingCart, Landmark, Factory, MapPin, Phone, Mail, Globe2, ChevronRight, Sparkles, Zap, Shield } from 'lucide-react'
+import { Reveal, RevealStagger } from '../components/Reveal.jsx'
 
 export default function Home() {
   const [stats, setStats] = useState(null)
@@ -70,9 +71,9 @@ export default function Home() {
   return (
     <div className="min-h-screen page-shell">
       {/* Hero */}
-      <section className="hero-gradient py-16 lg:py-24 relative overflow-hidden">
+      <section className="hero-gradient hero-under-nav pb-16 lg:pb-24 relative overflow-hidden">
         <div className="absolute inset-0 pointer-events-none" style={{backgroundImage:'radial-gradient(circle at 50% 0%,rgba(99,102,241,0.12) 0%,transparent 70%)'}}/>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative hero-entrance">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold mb-8 animate-fade-in-up"
                style={{background:'rgba(99,102,241,0.12)',border:'1px solid rgba(99,102,241,0.3)',color:'#a5b4fc'}}>
             <Sparkles className="w-3.5 h-3.5"/>
@@ -96,7 +97,7 @@ export default function Home() {
       {stats && (
         <section className="py-10 relative">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <RevealStagger className="grid grid-cols-2 md:grid-cols-4 gap-6" step={70}>
               {[
                 { value: stats.case_studies, label: 'Case Studies' },
                 { value: '100+', label: 'Happy Clients' },
@@ -108,7 +109,7 @@ export default function Home() {
                   <div className="text-xs text-slate-500 font-medium uppercase tracking-wider">{s.label}</div>
                 </div>
               ))}
-            </div>
+            </RevealStagger>
           </div>
         </section>
       )}
@@ -116,15 +117,15 @@ export default function Home() {
       {/* Why Choose Section */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <h2 className="heading-secondary mb-3">Why Choose Sugam-AI Solutions?</h2>
             <p className="text-slate-400 max-w-2xl mx-auto">We combine deep local knowledge with global AI standards to deliver solutions that actually work.</p>
-          </div>
-          <div className="grid-responsive reveal-stagger">
+          </Reveal>
+          <RevealStagger className="grid-responsive">
             {features.map((feature, index) => {
               const Icon = feature.icon
               return (
-                <div key={index} className="card p-8 animate-fade-in-up">
+                <div key={index} className="card p-8">
                   <div className="mb-5 icon-badge w-12 h-12">
                     <Icon className="w-6 h-6 text-indigo-400 m-auto" />
                   </div>
@@ -141,18 +142,18 @@ export default function Home() {
                 </div>
               )
             })}
-          </div>
+          </RevealStagger>
         </div>
       </section>
 
       {/* Industries */}
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
+          <Reveal className="text-center mb-12">
             <h2 className="heading-secondary mb-3">Industries We Serve</h2>
             <p className="text-slate-400 max-w-2xl mx-auto">From traditional sectors to emerging markets — we understand the unique AI opportunities in every vertical.</p>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 reveal-stagger">
+          </Reveal>
+          <RevealStagger className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {industries.map((industry, index) => {
               const Icon = industry.icon
               return (
@@ -167,14 +168,14 @@ export default function Home() {
                 </div>
               )
             })}
-          </div>
+          </RevealStagger>
         </div>
       </section>
 
       {/* CTA Banner */}
       <section className="py-16">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="card-elevated p-10 text-center relative overflow-hidden animate-fade-in">
+          <Reveal className="card-elevated p-10 text-center relative overflow-hidden" variant="scale">
             <div className="absolute inset-0 pointer-events-none" style={{background:'radial-gradient(ellipse at 50% -20%,rgba(99,102,241,0.2),transparent 70%)'}}/>
             <h2 className="text-3xl font-bold text-slate-100 mb-4 relative">Ready to Transform with AI?</h2>
             <p className="text-slate-400 mb-8 max-w-xl mx-auto relative">Join the growing network of Nepali businesses leveraging AI for real competitive advantage.</p>
@@ -184,7 +185,7 @@ export default function Home() {
               </Link>
               <Link to="/services" className="btn-outline">Explore Services</Link>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -192,13 +193,13 @@ export default function Home() {
       <section className="py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-start">
-            <div>
+            <Reveal>
               <h2 className="heading-secondary mb-8">What Sets Us Apart</h2>
-              <div className="space-y-6">
+              <RevealStagger className="space-y-6" step={90}>
                 {whyUs.map((item, i) => {
                   const Icon = item.icon
                   return (
-                <div key={i} className="flex items-start gap-4 animate-fade-in-up">
+                <div key={i} className="flex items-start gap-4">
                       <div className="icon-badge w-10 h-10 flex-shrink-0 flex items-center justify-center">
                         <Icon className="w-5 h-5 text-amber-400" />
                       </div>
@@ -209,9 +210,9 @@ export default function Home() {
                     </div>
                   )
                 })}
-              </div>
-            </div>
-            <div className="card-elevated p-8">
+              </RevealStagger>
+            </Reveal>
+            <Reveal variant="right" delay={100} className="card-elevated p-8">
               <h3 className="heading-tertiary mb-6">Get in Touch</h3>
               <div className="space-y-4 text-slate-400 text-sm">
                 {[
@@ -229,7 +230,7 @@ export default function Home() {
               <div className="mt-8">
                 <Link to="/contact" className="btn-primary w-full text-center">Start a Conversation</Link>
               </div>
-            </div>
+            </Reveal>
           </div>
         </div>
       </section>

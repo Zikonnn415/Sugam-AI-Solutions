@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { ArrowLeft, CalendarDays } from 'lucide-react'
+import { Reveal } from '../components/Reveal.jsx'
 
 export default function EventDetail(){
   const { id } = useParams()
@@ -15,16 +16,28 @@ export default function EventDetail(){
 
   return (
     <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-10 section-end page-shell">
-      <Link to="/events" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 text-sm mb-8 transition-colors">
-        <ArrowLeft className="w-4 h-4"/> Back to Events
-      </Link>
-      {ev.image_url && <img src={ev.image_url} alt={ev.title} className="w-full rounded-2xl mb-8 max-h-72 object-cover"/>}
-      <div className="flex items-center gap-2 text-indigo-400 text-sm mb-3">
-        <CalendarDays className="w-4 h-4"/>
-        {new Date(ev.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}
-      </div>
-      <h1 className="heading-secondary mb-5">{ev.title}</h1>
-      {ev.description && <div className="text-slate-400 leading-relaxed whitespace-pre-wrap">{ev.description}</div>}
+      <Reveal>
+        <Link to="/events" className="inline-flex items-center gap-2 text-indigo-400 hover:text-indigo-300 text-sm mb-8 link-hover-lift">
+          <ArrowLeft className="w-4 h-4"/> Back to Events
+        </Link>
+      </Reveal>
+      {ev.image_url && (
+        <Reveal variant="fade" delay={60}>
+          <img src={ev.image_url} alt={ev.title} className="w-full rounded-2xl mb-8 max-h-72 object-cover"/>
+        </Reveal>
+      )}
+      <Reveal delay={100}>
+        <div className="flex items-center gap-2 text-indigo-400 text-sm mb-3">
+          <CalendarDays className="w-4 h-4"/>
+          {new Date(ev.date).toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'})}
+        </div>
+        <h1 className="heading-secondary mb-5">{ev.title}</h1>
+      </Reveal>
+      {ev.description && (
+        <Reveal delay={160}>
+          <div className="text-slate-400 leading-relaxed whitespace-pre-wrap">{ev.description}</div>
+        </Reveal>
+      )}
     </div>
   )
 }
